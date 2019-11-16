@@ -3,14 +3,17 @@
 <script>
     $(document).ready(function() {
         // $('.modal').modal();
-        $(".saveForm").submit(function(e) {
+        $("#saveForm").submit(function(e) {
             e.preventDefault();
-            var atribut = $(this).attr("id");
+            var atribut = $(this).attr("name");
             var title = $('#title').val();
             var subtitle = $('#subtitle').val();
-            var slider = $("#slider").val();
+            var slider = $("#slider_gambar").val();
             if (atribut == "tambah") {
-                if (slider == "" || title == "") {
+                console.log(title)
+                console.log(subtitle)
+                console.log(slider)
+                if (subtitle == "" || title == "" || slider == "") {
                     Swal.fire({
                         title: "Oopss !",
                         text: "Data ada yang kosong",
@@ -48,7 +51,7 @@
                                 type: 'error',
                                 confirmButtonClass: "btn btn-danger",
                                 buttonsStyling: false
-                            }).catch(swal.noop)
+                            })
                         }
                     });
                 }
@@ -63,7 +66,7 @@
                         confirmButtonClass: "btn btn-warning"
                     }).catch(swal.noop);
                 } else {
-                    Swal.fire({
+                    $.ajax({
                         url: '<?php echo base_url(); ?>update_slider',
                         type: "POST",
                         data: new FormData(this),
@@ -74,7 +77,7 @@
                         success: function(data) {
                             Swal.fire({
                                 title: 'Sukses',
-                                text: "Data berhasil diupdate",
+                                text: "Data berhasil di ubah",
                                 type: 'success',
                                 showCancelButton: false,
                                 confirmButtonClass: 'btn btn-success',
@@ -91,15 +94,16 @@
                                 type: 'error',
                                 confirmButtonClass: "btn btn-danger",
                                 buttonsStyling: false
-                            }).catch(swal.noop)
+                            })
                         }
                     });
                 }
             }
         });
 
-        var table = $('#page-length-option').DataTable({
-            "ajax": "<?php echo base_url('show_slider'); ?>",
+        var table = $('#page_slider').DataTable({
+            //"scrollX": true,
+            "ajax": "<?php echo base_url(); ?>show_slider",
             "order": [
                 [2, 'asc']
             ],
@@ -110,16 +114,22 @@
                     "orderable": false,
                 },
                 {
+                    "data": "title"
+                },
+                {
+                    "data": "subtitle"
+                },
+                {
                     "data": null,
                     "render": function(data) {
-                        return '<img src=<?= base_url('asset/portal/banner/') ?>' + data.name_slider + ' class="responsive-img">';
+                        return '<img style="width: 100px;" src=<?= base_url('assets/portal/banner/') ?>' + data.slider + ' class="responsive-img">';
                     }
                 },
                 {
                     "data": null,
                     "render": function(data) {
-                        return '<a onclick=edit("' + data.id_slider + '");><i class="material-icons blue-text" title="Edit">edit</i></a> &nbsp;' +
-                            ' <a onclick=remove("' + data.id_slider + '");><i class="material-icons red-text" title="Hapus">delete_forever</i></a>';
+                        return '<a href="#!" onclick=edit("' + data.id_slider + '");> <i class="fas fa-eye"></i> </a> &nbsp;' +
+                            '<a  href="#!" onclick=remove("' + data.id_slider + '");> <i class="fas fa-trash"></i> </a>';
                     }
                 },
             ]
@@ -141,17 +151,17 @@
 
 
     function remove(id) {
+        // alert('HSDSG')
         Swal.fire({
-            title: 'Apakah anda yakin ?',
-            text: "Data yang telah anda hapus tidak dapat dikembalikan!",
-            type: 'warning',
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal',
-            buttonsStyling: false
-        }, function() {
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            // alert('kjsdhs')
             $.ajax({
                 url: "<?php echo base_url(); ?>delete_slider",
                 type: "POST",
@@ -178,12 +188,14 @@
                 id: id
             },
             success: function(data) {
-                $("#modal1").modal("open");
-                $("h5").text("Edit Slider");
-                $(".saveForm").attr("data-id", data.id_slider);
-                $(".saveForm").attr("id", 'update');
+                $("#modal_lg").modal("show");
+                $("h4").text("Edit Slider");
+                $("#saveForm").attr("data-id", data.id_slider);
+                $("#saveForm").attr("name", 'update');
                 $("#id").attr("value", data.id_slider);
-                $("#btnok").text("Update");
+                $('#title').val(data.title);
+                $('#subtitle').val(data.subtitle);
+                $("#btnok").val("Update");
                 $("#btncancel").attr('onclick', 'normal();');
             },
             error: function(jqXHR, textStatus, errorThrown) {

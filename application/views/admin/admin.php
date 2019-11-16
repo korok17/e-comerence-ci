@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
 <?php
-if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'portal-login' && $this->uri->segment(1) != 'underconstruction' && $title == 'Page Not Found') { ?>
+if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'underconstruction') { ?>
 
     <body class="hold-transition sidebar-mini layout-fixed">
         <div class="wrapper">
@@ -32,12 +32,12 @@ if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'portal-login'
             <?php } ?>
             <!-- BEGIN: Footer-->
             <?php
-            if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'underconstruction' && $title != 'Page Not Found') {
+            if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'underconstruction') {
                 echo $navbar;
                 echo $sidbar;
             }
             echo $content;
-            if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'underconstruction' && $title != 'Page Not Found') {
+            if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'underconstruction') {
                 echo $footer;
             }
             ?>
@@ -52,9 +52,9 @@ if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'portal-login'
         <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
         <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="<?= base_url(); ?>assets/admin/vendors/sweetalert2/sweetalert2.all.min.js" type="text/javascript"></script>
-        <script>
+        <!-- <script>
             $.widget.bridge('uibutton', $.ui.button)
-        </script>
+        </script> -->
         <!-- ChartJS -->
         <script src="<?= base_url() ?>assets/plugins/chart.js/Chart.min.js"></script>
         <!-- Sparkline -->
@@ -137,10 +137,23 @@ if ($this->uri->segment(1) != 'auth' && $this->uri->segment(1) != 'portal-login'
             });
         </script>
         <script>
-            // Add the following code if you want the name of the file appear on select
-            $(".custom-file-input").on("change", function() {
+            Add the following code
+            if you want the name of the file appear on select
+            $("#custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();
-                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                $(this).siblings("#custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
+        <!-- menu -->
+        <script>
+            $(document).ready(function() {
+                $('#mytable').DataTable({
+                    "processing": true,
+                    "serverSide": true,
+                    //"ajax": "data.php"
+                    "ajax": '<?php echo base_url('menus/data'); ?>'
+
+                });
             });
         </script>
     </body>

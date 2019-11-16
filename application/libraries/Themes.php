@@ -19,6 +19,28 @@ class Themes
         $data['footer'] = $this->_ci->load->view('/portal/template/footer.php', $data, true);
         $this->_ci->load->view('/portal/portal.php', $data);
     }
+    function Depan($theme, $data = null)
+    {
+        $data['content'] = $this->_ci->load->view($theme, $data, true);
+        $data['menu'] = $this->_ci->load->view('/depan/template/menu.php', $data, true);
+        $data['header'] = $this->_ci->load->view('/depan/template/header.php', $data, true);
+        $data['slider'] = $this->_ci->load->view('/depan/template/slider.php', $data, true);
+        $data['produk'] = $this->_ci->load->view('/depan/template/produk.php', $data, true);
+        $data['boxes'] = $this->_ci->load->view('/depan/template/boxes.php', $data, true);
+        $data['features'] = $this->_ci->load->view('/depan/template/features.php', $data, true);
+        $data['footer'] = $this->_ci->load->view('/depan/template/footer.php', $data, true);
+        $this->_ci->load->view('/depan/depan.php', $data);
+    }
+    function Produk($theme, $data = null)
+    {
+        $data['content'] = $this->_ci->load->view($theme, $data, true);
+        $data['menu'] = $this->_ci->load->view('/depan/template/menu_all.php', $data, true);
+        // $data['home'] = $this->_ci->load->view('/depan/template/home_all.php', $data, true);
+        $data['header'] = $this->_ci->load->view('/depan/template/header_all.php', $data, true);
+        $data['footer'] = $this->_ci->load->view('/depan/template/footer_all.php', $data, true);
+        $this->_ci->load->view('/depan/category.php', $data);
+    }
+
     function Admin($theme, $data = null)
     {
         $data['content'] = $this->_ci->load->view($theme, $data, true);

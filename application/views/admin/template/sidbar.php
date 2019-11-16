@@ -12,60 +12,64 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- QUERY MENU -->
+                <!-- QUERY MENU -->
                 <?php
-                $role_id = $this->session->userdata('role_id');
-                $queryMenu = "SELECT `user_menu`.`id`, `menu`
-                            FROM `user_menu` JOIN `user_access_menu`
-                              ON `user_menu`.`id` = `user_access_menu`.`menu_id`
-                           WHERE `user_access_menu`.`role_id` = $role_id
-                        ORDER BY `user_access_menu`.`menu_id` ASC
-                        ";
-                $menu = $this->db->query($queryMenu)->result_array();
+                $id_level_user  = $this->session->userdata('level');
+                $sql_menu = "SELECT * FROM x_menu WHERE id in(select id_menu from x_user_rule where id_level_user=$id_level_user) and is_main_menu=0";
+                if ($id_level_user == '') {
+                    redirect('auth');
+                } else {
+                    $main_menu = $this->db->query($sql_menu)->result();
+                }
                 ?>
-
-
-                <!-- LOOPING MENU -->
-                <?php foreach ($menu as $m) : ?>
-                    <li class="nav-item has-treeview menu-open mt-2">
-                        <a href="#" class="nav-link active">
-                            <i class="nav-icon fas fa-tachometer-alt"></i>
-                            <p>
-                                <?= $m['menu']; ?>
-                                <!-- Data Master -->
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-
-                        <ul class="nav nav-treeview">
-                            <!-- SIAPKAN SUB-MENU SESUAI MENU -->
-                            <?php
-                                $menuId = $m['id'];
-                                $querySubMenu = "SELECT *
-                               FROM `user_sub_menu` JOIN `user_menu` 
-                                 ON `user_sub_menu`.`menu_id` = `user_menu`.`id`
-                              WHERE `user_sub_menu`.`menu_id` = $menuId
-                                AND `user_sub_menu`.`is_active` = 1
-                        ";
-                                $subMenu = $this->db->query($querySubMenu)->result_array();
-                                ?>
-
-                            <?php foreach ($subMenu as $sm) : ?>
-                                <?php if ($title == $sm['title']) : ?>
-                                    <li class="nav-item active">
-                                    <?php else : ?>
+                <?php foreach ($main_menu as $main) : ?>
+                    <!-- // chek apakah ada submenu ? -->
+                    <?php
+                        $this->db->select('a.nama_menu, a.link, a.icon');
+                        $this->db->from('x_menu a');
+                        $this->db->join('x_user_rule b', 'b.id_menu = a.id');
+                        $this->db->where('b.id_level_user', $id_level_user);
+                        $this->db->where('a.is_main_menu', $main->id);
+                        $submenu = $this->db->get();
+                        ?>
+                    <?php if ($submenu->num_rows() > 0) : ?>
+                        <!-- // tampilkan submenu disini -->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="<?= strtoupper($main->nama_menu) ?>"></i>
+                                <p>
+                                    <?= strtoupper($main->nama_menu) ?>
+                                    <i class="fas fa-angle-right right"></i>
+                                </p>
+                            </a>
+                            <ul class='nav nav-treeview'>";
+                                <?php foreach ($submenu->result() as $sub) : ?>
                                     <li class="nav-item">
-                                    <?php endif; ?>
-                                    <a class="nav-link pb-0" href="<?= base_url($sm['url']); ?>">
-                                        <i class="<?= $sm['icon']; ?>"></i>
-                                        <span><?= $sm['title']; ?></span></a>
+                                        <a href="<?= base_url($sub->link) ?>" class="nav-link">
+                                            <i class="<?= $sub->icon; ?>"></i>
+                                            <p><?= strtoupper($sub->nama_menu) ?></p>
+                                        </a>
                                     </li>
                                 <?php endforeach; ?>
+                            </ul>
+                        </li>
+                    <?php else : ?>
 
-                        </ul>
-                    </li>
+                        <?php
+                                $test = $main->nama_menu;
+                                eval("\$test = \"$test\";");
+                                ?>
+
+                        <li class="nav-item has-treeview">
+                            <a href="<?= base_url($main->link) ?>" class="nav-link">
+                                <i class="<?= $main->icon; ?>"></i>
+                                <p><?= strtoupper($test) ?></p>
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
                 <li class=" nav-item">
-                    <a href="<?= base_url('logoutAdmin'); ?>" class="nav-link">
+                    <a href="<?= base_url('logout'); ?>" class="nav-link">
                         <i class="nav-icon fas fa-power-off"></i>
                         <p>
                             Logout

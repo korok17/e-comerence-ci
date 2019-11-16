@@ -5,60 +5,117 @@ class Auth extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        // is_logged_in();
     }
     public function index()
     {
-        if ($this->session->userdata('email')) {
-            redirect('user');
-        }
-
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
         $this->form_validation->set_rules('password', 'Password', 'trim|required');
 
         if ($this->form_validation->run() == false) {
             $data['title'] = 'website | login';
-            $this->themes->Admin('auth/login', $data);
+            $this->load->view('auth/login', $data);
         } else {
             // validasinya success
             $this->_login();
         }
     }
 
+    // ambil IP
+    public function getRealIpAddr()
+    {
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        } else {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
 
     private function _login()
     {
-        $email = $this->input->post('email');
-        $password = $this->input->post('password');
+        $username = $this->input->post('email');
+        $pass = $this->input->post('password');
+        $remember = $this->input->post('remember');
+        $check_data = $this->model_auth->prosesLoginAdmin($username);
+        $get_data = $check_data->row();
 
-        $user = $this->db->get_where('user', ['email' => $email])->row_array();
-
-        // jika usernya ada
-        if ($user) {
-            // jika usernya aktif
-            if ($user['is_active'] == 1) {
-                // cek password
-                if (password_verify($password, $user['password'])) {
-                    $data = [
-                        'email' => $user['email'],
-                        'role_id' => $user['role_id']
-                    ];
-                    $this->session->set_userdata($data);
-                    if ($user['role_id'] == 1) {
-                        redirect('admin');
-                    } else {
-                        redirect('user');
-                        // echo "ok";
-                    }
-                } else {
-                    $this->session->set_flashdata('message', 'Wrong password!');
-                    redirect('auth');
-                }
+        if ($check_data->num_rows() > 0 && password_verify($pass, $get_data->password) && $get_data->status == 0 && $get_data->status == 0) {
+            $this->session->set_userdata(array(
+                'status_login' => TRUE,
+                'username' => $get_data->username,
+                'email' => $get_data->email,
+                'level' => $get_data->id_level_user,
+                'role_id' => $get_data->role_id,
+                'akses' => 'admin',
+            ));
+            if (isset($remember)) {
+                $this->input->set_cookie([
+                    'name'   => 'uname',
+                    'value'  => $user,
+                    'expire' => 3600 * 24,
+                    'secure' => TRUE
+                ]);
+                $this->input->set_cookie([
+                    'name'   => 'upass',
+                    'value'  => $pass,
+                    'expire' => 3600 * 24,
+                    'secure' => TRUE
+                ]);
+            }
+            $ubah_ip = $this->model_auth->ubahip('user', ['ip' => $this->getRealIpAddr()], ['email' => $username]);
+            $ubah_status = $this->model_auth->ubahip('user', ['status' => 1, 'time' => date('Y-m-d H:i:s')], ['email' => $username]);
+            if ($ubah_ip) {
+                redirect('admin');
             } else {
-                $this->session->set_flashdata('message', 'This email has not been activated!');
+                session_destroy();
+                $this->session->set_flashdata('alert', 'Gagal mengambil alamat IP !');
                 redirect('auth');
             }
+        } else if ($check_data->num_rows() > 0 && password_verify($pass, $get_data->password) && $get_data->status == 1) {
+            $getdate = date('Y-m-d');
+            $gettime = date('H:i:s');
+            $date = date_create($get_data->time);
+            date_add($date, date_interval_create_from_date_string('60 seconds'));
+            $fivedata =  explode(' ', date_format($date, 'Y-m-d H:i:s'));
+            $fivedate = $fivedata[0];
+            $fivetime = $fivedata[1];
+            if ($gettime >= $fivetime && $getdate >= $fivedate) {
+                $this->session->set_userdata(array(
+                    'status_login' => TRUE,
+                    'username' => $get_data->username,
+                    'email' => $get_data->email,
+                    'level' => $get_data->id_level_user,
+                    'role_id' => $get_data->role_id,
+                    'akses' => 'admin',
+                ));
+                if (isset($remember)) {
+                    $this->input->set_cookie([
+                        'name'   => 'uname',
+                        'value'  => $user,
+                        'expire' => 3600 * 24,
+                        'secure' => TRUE
+                    ]);
+                    $this->input->set_cookie([
+                        'name'   => 'upass',
+                        'value'  => $pass,
+                        'expire' => 3600 * 24,
+                        'secure' => TRUE
+                    ]);
+                }
+                $ubah_status = $this->model_auth->ubahip('user', ['time' => date('Y-m-d H:i:s')], ['email' => $username]);
+                redirect('admin');
+            } else {
+                $this->session->set_flashdata('alert', 'Akun sedang aktif / digunakan !');
+                redirect('auth');
+                //echo $get_data->ip." / ".$this->getRealIpAddr()." / ok / ".$get_data->time;
+            }
         } else {
-            $this->session->set_flashdata('message', 'Email is not registered!');
+            $this->session->set_flashdata('alert', 'Username atau password tidak valid !');
             redirect('auth');
         }
     }
@@ -83,7 +140,7 @@ class Auth extends CI_Controller
         if ($this->form_validation->run() == false) {
             $data['title'] = 'WPU User Registration';
             $this->load->view('templates/auth_header', $data);
-            $this->load->view('auth/registration');
+            $this->load->view('depan/registration');
             $this->load->view('templates/auth_footer');
         } else {
             $email = $this->input->post('email', true);
@@ -192,9 +249,9 @@ class Auth extends CI_Controller
     public function logout()
     {
         $this->session->unset_userdata('email');
-        $this->session->unset_userdata('role_id');
+        $this->session->unset_userdata('status');
 
-        $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">You have been logged out!</div>');
+        $this->session->set_flashdata('message', 'You have been logged out!');
         redirect('auth');
     }
 
@@ -291,6 +348,98 @@ class Auth extends CI_Controller
 
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Password has been changed! Please login.</div>');
             redirect('auth');
+        }
+    }
+
+    // login member
+    public function auth_depan()
+    {
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+        $this->form_validation->set_rules('password', 'Password', 'trim|required');
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'website | login';
+            $this->load->view('depan/login', $data);
+        } else {
+            // validasinya success
+            $this->_login();
+        }
+    }
+    public function daftar()
+    {
+        if ($this->session->userdata('email')) {
+            redirect('user');
+        }
+
+        $this->form_validation->set_rules('name', 'Name', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[user.email]', [
+            'is_unique' => 'This email has already registered!'
+        ]);
+        $this->form_validation->set_rules('password1', 'Password', 'required|trim|min_length[3]|matches[password2]', [
+            'matches' => 'Password dont match!',
+            'min_length' => 'Password too short!'
+        ]);
+        $this->form_validation->set_rules('password2', 'Password', 'required|trim|matches[password1]');
+
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'WPU User Registration';
+            $this->load->view('depan/register');
+        } else {
+            $email = $this->input->post('email', true);
+            $data = [
+                'name' => htmlspecialchars($this->input->post('name', true)),
+                'email' => htmlspecialchars($email),
+                'image' => 'default.jpg',
+                'password' => password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
+                'role_id' => 2,
+                'is_active' => 0,
+                'date_created' => time()
+            ];
+
+            // siapkan token
+            $token = base64_encode(random_bytes(32));
+            $user_token = [
+                'email' => $email,
+                'token' => $token,
+                'date_created' => time()
+            ];
+
+            $this->db->insert('user', $data);
+            $this->db->insert('user_token', $user_token);
+
+            $this->_sendEmail($token, 'verify');
+
+            $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Congratulation! your account has been created. Please activate your account</div>');
+            redirect('auth');
+        }
+    }
+    public function forgetPassword()
+    {
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email');
+
+        if ($this->form_validation->run() == false) {
+            $data['title'] = 'Forgot Password';
+            $this->load->view('depan/forget');
+        } else {
+            $email = $this->input->post('email');
+            $user = $this->db->get_where('user', ['email' => $email, 'is_active' => 1])->row_array();
+
+            if ($user) {
+                $token = base64_encode(random_bytes(32));
+                $user_token = [
+                    'email' => $email,
+                    'token' => $token,
+                    'date_created' => time()
+                ];
+
+                $this->db->insert('user_token', $user_token);
+                $this->_sendEmail($token, 'forgot');
+
+                $this->session->set_flashdata('message', 'Please check your email to reset your password!');
+                redirect('auth/forgetpassword');
+            } else {
+                $this->session->set_flashdata('message', 'Email is not registered or activated!');
+                redirect('auth/forgetpassword');
+            }
         }
     }
 }
