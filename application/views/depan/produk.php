@@ -9,10 +9,10 @@
             <div class="col">
                 <div class="page_nav">
                     <ul class="d-flex flex-row align-items-start justify-content-center">
-                        <li class="active"><a href="category.html">Parfum</a></li>
-                        <li><a href="category.html">Alkohol</a></li>
-                        <li><a href="category.html">Botol</a></li>
-                        <li><a href="category.html">Bibit</a></li>
+                        <li class="active"><a href="<?= base_url('category') ?>">Parfum</a></li>
+                        <li><a href="<?= base_url('category') ?>">Alkohol</a></li>
+                        <li><a href="c<?= base_url('category') ?>">Botol</a></li>
+                        <li><a href="<?= base_url('category') ?>">Bibit</a></li>
                     </ul>
                 </div>
             </div>
@@ -27,7 +27,7 @@
                         <div class="product_info d-flex flex-row align-items-start justify-content-start">
                             <div>
                                 <div>
-                                    <div class="product_name"><a href="product.html">Dmiqa perfume Premium</a></div>
+                                    <div class="product_name"><a href="<?= base_url('product') ?>">Dmiqa perfume Premium</a></div>
                                     <div class="product_category">stok tersedia</a></div>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                         <div class="product_info d-flex flex-row align-items-start justify-content-start">
                             <div>
                                 <div>
-                                    <div class="product_name"><a href="product.html">Dmiqa perfume Normal Grade</a></div>
+                                    <div class="product_name"><a href="<?= base_url('product') ?>">Dmiqa perfume Normal Grade</a></div>
                                     <div class="product_category">Stock tersedia</div>
                                 </div>
                             </div>

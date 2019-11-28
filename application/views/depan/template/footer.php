@@ -30,18 +30,18 @@
                         <div class="footer_title">Pelayanan</div>
                         <ul class="footer_list">
                             <li>
-                                <a href="confirmation.html">
+                                <a href="<?= base_url('comfirmation') ?>">
                                     <div>Konfirmasi pembayaran<div class="footer_tag_1">check now</div>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="pengiriman.html">
+                                <a href="<?= base_url('pengiriman') ?>">
                                     <div>Jasa pengiriman</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="toko.html">
+                                <a href="<?= base_url('toko') ?>">
                                     <div>Cek di Toko<div class="footer_tag_2">recommended</div>
                                     </div>
                                 </a>
@@ -52,7 +52,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="contact.html">
+                                <a href="<?= base_url('contact') ?>">
                                     <div>Contact</div>
                                 </a>
                             </li>
@@ -96,9 +96,9 @@
                         </div>
                         <nav class="footer_nav ml-md-auto order-md-2 order-1">
                             <ul class="d-flex flex-row align-items-center justify-content-start">
-                                <li><a href="howto.html">How to order</a></li>
-                                <li><a href="member.html">Membership</a></li>
-                                <li><a href="contact.html">Contact</a></li>
+                                <li><a href="<?= base_url('howto') ?>">How to order</a></li>
+                                <li><a href="<?= base_url('member') ?>">Membership</a></li>
+                                <li><a href="<?= base_url('contact') ?>">Contact</a></li>
                             </ul>
                         </nav>
                     </div>

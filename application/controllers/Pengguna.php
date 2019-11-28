@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Pengguna extends CI_Controller
 {
-
     public function index()
     {
         $data['title'] = 'dmiqa';
@@ -63,5 +62,10 @@ class Pengguna extends CI_Controller
     {
         $data['title'] = 'dmiqa';
         $this->themes->Produk('depan/checkout', $data);
+    }
+    public function toko()
+    {
+        $data['title'] = 'dmiqa';
+        $this->load->view('depan/toko', $data);
     }
 }

@@ -2,12 +2,12 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="<?= base_url('dashboard-admin') ?>" class="brand-link">
-        <!-- <img src="<?= base_url('assets/frondend/assets1/img/bb.png') ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+        <img src="<?= base_url('assets/depan/login/img/round.png') ?>" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light mx-auto">DMIQA</span>
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar mt-5">
+    <div class="sidebar">
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">

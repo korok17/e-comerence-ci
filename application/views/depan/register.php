@@ -69,8 +69,8 @@
                         <input type="password" class="input" required="required">
                     </div>
                 </div>
-                <a href="forget.html">Forgot Password?</a>
-                <a href="login.html" style="float: left; margin-top:-20px;">Login</a>
+                <a href="<?= base_url('forget-password') ?>">Forgot Password?</a>
+                <a href="<?= base_url('login') ?>" style="float: left; margin-top:-20px;">Login</a>
                 <input type="submit" class="btn" value="Sign up">
             </form>
         </div>

@@ -36,8 +36,8 @@
                         <input type="password" class="input">
                     </div>
                 </div>
-                <a href="forget.html" style="margin-top:20px;">Forgot Password?</a>
-                <a href="register.html" style="float: left; margin-top:-20px;">Sign Up</a>
+                <a href="<?= base_url('forget-password') ?>" style="margin-top:20px;">Forgot Password?</a>
+                <a href="<?= base_url('registrasi') ?>" style="float: left; margin-top:-20px;">Sign Up</a>
                 <a href="../index.html" style="float: left; font-size: 20px; margin-top:15px; margin-left:-55px;">
                     <i class="fas fa-arrow-circle-left"></i>
                 </a>

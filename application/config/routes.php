@@ -102,9 +102,13 @@ $route['product'] = 'pengguna/product';
 $route['pengiriman'] = 'pengguna/pengiriman';
 $route['member'] = 'pengguna/member';
 $route['checkout'] = 'pengguna/checkout';
+$route['toko'] = 'pengguna/toko';
 
 
 //login
 $route['login'] = 'auth/auth_depan';
+$route['registrasi'] = 'auth/daftar';
+$route['forget-password'] = 'auth/forgetPassword';
+
 //logout
 $route['logout'] = 'auth/logout';

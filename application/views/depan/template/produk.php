@@ -9,10 +9,10 @@
 			<div class="col">
 				<div class="page_nav">
 					<ul class="d-flex flex-row align-items-start justify-content-center">
-						<li class="active"><a href="category.html">Semua</a></li>
-						<li><a href="category.html">Normal</a></li>
-						<li><a href="category.html">Premium</a></li>
-						<li><a href="category.html">Prestige</a></li>
+						<li class="active"><a href="<?= base_url('pengiriman') ?>">Semua</a></li>
+						<li><a href="<?= base_url('pengiriman') ?>">Normal</a></li>
+						<li><a href="<?= base_url('pengiriman') ?>">Premium</a></li>
+						<li><a href="<?= base_url('pengiriman') ?>">Prestige</a></li>
 					</ul>
 				</div>
 			</div>

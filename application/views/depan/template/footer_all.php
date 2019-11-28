@@ -30,18 +30,18 @@
                         <div class="footer_title">Pelayanan</div>
                         <ul class="footer_list">
                             <li>
-                                <a href="confirmation.html">
+                                <a href="<?= base_url('camfirmation') ?>">
                                     <div>Konfirmasi Pembayaran<div class="footer_tag_1">check now</div>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="pengiriman.html">
+                                <a href="<?= base_url('pengiriman') ?>">
                                     <div>Jasa pengiriman</div>
                                 </a>
                             </li>
                             <li>
-                                <a href="toko.html">
+                                <a href="<?= base_url('toko') ?>">
                                     <div>Cek di Toko<div class="footer_tag_2">recommended</div>
                                     </div>
                                 </a>
@@ -52,7 +52,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="contact.html">
+                                <a href="<?= base_url('contact') ?>">
                                     <div>Contact</div>
                                 </a>
                             </li>

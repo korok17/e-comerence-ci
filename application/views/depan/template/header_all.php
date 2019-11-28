@@ -2,7 +2,7 @@
     <div class="header_overlay"></div>
     <div class="header_content d-flex flex-row align-items-center justify-content-start">
         <div class="logo">
-            <a href="index.html">
+            <a href="<?= base_url() ?>">
                 <div class="d-flex flex-row align-items-center justify-content-start">
                     <div><img src="<?= base_url('assets/depan/') ?>images/round.png" alt="home"></div>
                     <div>DMIQA PARFUM</div>
@@ -12,10 +12,10 @@
         <div class="hamburger"><i class="fa fa-bars" aria-hidden="true"></i></div>
         <nav class="main_nav">
             <ul class="d-flex flex-row align-items-start justify-content-start">
-                <li><a href="category.html">Category</a></li>
-                <li><a href="member.html">Membership </a></li>
-                <li><a href="howto.html">how to order</a></li>
-                <li><a href="login/login.html">Login</a></li>
+                <li><a href="<?= base_url('category') ?>">Category</a></li>
+                <li><a href="<?= base_url('member') ?>">Membership </a></li>
+                <li><a href="<?= base_url('howto') ?>">how to order</a></li>
+                <li><a href="<?= base_url('auth') ?>">Login</a></li>
             </ul>
         </nav>
         <div class="header_right d-flex flex-row align-items-center justify-content-start ml-auto">
@@ -27,7 +27,7 @@
                 </form>
             </div>
             <div class="cart">
-                <a href="cart.html">
+                <a href="<?= base_url('pengiriman') ?>">
                     <div>
                         <img src="<?= base_url('assets/depan/') ?>images/cart.svg" alt="https://www.flaticon.com/authors/freepik">
                         <div>
